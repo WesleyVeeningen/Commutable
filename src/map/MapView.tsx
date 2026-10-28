@@ -47,6 +47,8 @@ interface Props {
 
 const SOURCE = 'hexes';
 const LAYER = 'hexes-fill';
+/** Land-coloured hex outlines: a constant-width gap between hexes at every zoom. */
+const GAP_LAYER = 'hexes-gap';
 /** Netherlands Randstad — the starting view before any places exist. */
 const DEFAULT_VIEW = { center: [4.65, 52.1] as [number, number], zoom: 8.6 };
 
@@ -73,10 +75,9 @@ export function MapView(props: Props) {
     map.on('click', (e: maplibregl.MapMouseEvent) => clickRef.current({ lng: e.lngLat.lng, lat: e.lngLat.lat }));
     map.on('load', () => {
       map.addSource(SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer(
-        { id: LAYER, type: 'fill', source: SOURCE, paint: { 'fill-opacity': 0, 'fill-antialias': true } },
-        map.getLayer(HEX_BEFORE_LAYER) ? HEX_BEFORE_LAYER : undefined,
-      );
+      const before = map.getLayer(HEX_BEFORE_LAYER) ? HEX_BEFORE_LAYER : undefined;
+      map.addLayer({ id: LAYER, type: 'fill', source: SOURCE, paint: { 'fill-opacity': 0 } }, before);
+      map.addLayer({ id: GAP_LAYER, type: 'line', source: SOURCE, paint: { 'line-width': 1.5 } }, before);
       setLoaded(true);
       props.onReady?.(map);
     });
@@ -89,7 +90,9 @@ export function MapView(props: Props) {
 
   // Base map colours.
   useEffect(() => {
-    if (loaded) applyBaseTheme(mapRef.current!, theme);
+    if (!loaded) return;
+    applyBaseTheme(mapRef.current!, theme);
+    mapRef.current!.setPaintProperty(GAP_LAYER, 'line-color', MAP_PALETTE[theme].land);
   }, [loaded, theme]);
 
   // Hex data.

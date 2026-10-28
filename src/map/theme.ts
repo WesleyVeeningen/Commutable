@@ -39,6 +39,15 @@ export const MAP_PALETTE: Record<Theme, Record<string, string>> = {
 
 export const HEAT_OPACITY: Record<Theme, number> = { light: 0.7, dark: 0.55 };
 
+/**
+ * Roads drawn over the heat layer. In dark mode the design's road colour is darker
+ * than the tinted hexes, so full-opacity real-world roads read as a black mesh.
+ */
+const ROAD_OPACITY: Record<Theme, { road: number; casing: number }> = {
+  light: { road: 1, casing: 1 },
+  dark: { road: 0.45, casing: 0 },
+};
+
 /** Hexes sit above land/water/buildings and minor streets, below main roads and labels (dense OSM streets would otherwise mesh over the heat). */
 export const HEX_BEFORE_LAYER = 'highway_major_casing';
 
@@ -79,8 +88,13 @@ export function applyBaseTheme(map: MlMap, theme: Theme) {
       if (src === 'waterway') setPaint(map, id, 'line-color', c.water);
       else if (src === 'boundary') setPaint(map, id, 'line-color', c.boundary);
       else if (id.startsWith('railway')) setPaint(map, id, 'line-color', c.rail);
-      else if (id.includes('casing')) setPaint(map, id, 'line-color', c.casing);
-      else if (src === 'transportation' || src === 'aeroway') setPaint(map, id, 'line-color', c.road);
+      else if (id.includes('casing')) {
+        setPaint(map, id, 'line-color', c.casing);
+        setPaint(map, id, 'line-opacity', ROAD_OPACITY[theme].casing);
+      } else if (src === 'transportation' || src === 'aeroway') {
+        setPaint(map, id, 'line-color', c.road);
+        setPaint(map, id, 'line-opacity', ROAD_OPACITY[theme].road);
+      }
     } else if (type === 'symbol') {
       setPaint(map, id, 'text-color', c.label);
       setPaint(map, id, 'text-halo-color', c.halo);

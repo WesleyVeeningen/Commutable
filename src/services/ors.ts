@@ -12,16 +12,28 @@ export function orsApiKey(): string | undefined {
   return k && k.trim() && !k.includes('your-openrouteservice-key') ? k.trim() : undefined;
 }
 
-async function orsFetch(path: string, init: RequestInit, signal?: AbortSignal): Promise<unknown> {
+/**
+ * `auth: 'header'` sends the key as an Authorization header (Matrix POST).
+ * `auth: 'query'` sends it as `api_key` — needed for the geocode GET endpoints, whose
+ * CORS preflight doesn't allow the Authorization header.
+ */
+async function orsFetch(
+  path: string,
+  init: RequestInit,
+  auth: 'header' | 'query',
+  signal?: AbortSignal,
+): Promise<unknown> {
   const key = orsApiKey();
   if (!key) throw new TravelError('config', 'Missing VITE_ORS_API_KEY');
+  const url =
+    auth === 'query'
+      ? `${BASE}${path}${path.includes('?') ? '&' : '?'}api_key=${encodeURIComponent(key)}`
+      : BASE + path;
+  const headers: Record<string, string> = { ...(init.headers as Record<string, string>), Accept: 'application/json' };
+  if (auth === 'header') headers.Authorization = key;
   let res: Response;
   try {
-    res = await fetch(BASE + path, {
-      ...init,
-      signal,
-      headers: { ...init.headers, Authorization: key, Accept: 'application/json' },
-    });
+    res = await fetch(url, { ...init, signal, headers });
   } catch (e) {
     if (signal?.aborted) throw new TravelError('aborted', 'Aborted');
     throw new TravelError('network', (e as Error).message);
@@ -80,6 +92,7 @@ export class OrsMatrixClient implements MatrixClient {
     const json = (await orsFetch(
       `/v2/matrix/${MODES[mode].orsProfile}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+      'header',
       signal,
     )) as { durations?: Duration[][] };
     if (!json.durations) throw new TravelError('server', 'Matrix response had no durations');
@@ -127,7 +140,7 @@ export class OrsGeocoder implements Geocoder {
       q.set('focus.point.lon', String(focus.lng));
       q.set('focus.point.lat', String(focus.lat));
     }
-    const json = (await orsFetch(`/geocode/autocomplete?${q}`, { method: 'GET' }, signal)) as {
+    const json = (await orsFetch(`/geocode/autocomplete?${q}`, { method: 'GET' }, 'query', signal)) as {
       features?: PeliasFeature[];
     };
     return (json.features ?? []).slice(0, 5).map(toAddress);
@@ -140,7 +153,7 @@ export class OrsGeocoder implements Geocoder {
       size: '1',
       layers: 'neighbourhood,borough,locality,localadmin',
     });
-    const json = (await orsFetch(`/geocode/reverse?${q}`, { method: 'GET' }, signal)) as {
+    const json = (await orsFetch(`/geocode/reverse?${q}`, { method: 'GET' }, 'query', signal)) as {
       features?: PeliasFeature[];
     };
     const p = json.features?.[0]?.properties;

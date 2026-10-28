@@ -34,6 +34,8 @@ VITE_ORS_API_KEY=your-key-here
 
 > Note: this is a front-end-only app, so the key is sent from the browser and is visible to anyone using your running
 > copy. That is fine for running it locally. If you deploy it publicly, put a small proxy in front of ORS.
+> Geocoding requests send the key as an `api_key` URL parameter, because the ORS geocode endpoints don't allow the
+> `Authorization` header from browsers. Matrix requests use the header.
 
 ## 3. Run it locally
 

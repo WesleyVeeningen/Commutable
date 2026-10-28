@@ -66,7 +66,11 @@ export function MapView(props: Props) {
       container: container.current!,
       style: STYLE_URL,
       ...DEFAULT_VIEW,
-      attributionControl: { compact: true },
+      attributionControl: {
+        compact: true,
+        customAttribution:
+          'Transit: <a href="https://transitous.org/sources" target="_blank" rel="noopener">Transitous</a>',
+      },
       dragRotate: false,
       pitchWithRotate: false,
     });

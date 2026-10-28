@@ -1,4 +1,4 @@
-export type Mode = 'walk' | 'bike' | 'car';
+export type Mode = 'walk' | 'bike' | 'car' | 'transit';
 
 export type Resolution = 'coarse' | 'fine';
 
@@ -27,11 +27,25 @@ export type Duration = number | null;
 
 /**
  * Anything that can answer "how long from each source to each destination".
- * ORS implements it today; a transit provider can implement it later.
+ * ORS answers walk/bike/car, Transitous answers transit.
  * Returns durations[sourceIndex][destinationIndex] in seconds.
  */
 export interface MatrixClient {
-  matrix(mode: Mode, sources: LngLat[], destinations: LngLat[], signal?: AbortSignal): Promise<Duration[][]>;
+  matrix(
+    mode: Mode,
+    sources: LngLat[],
+    destinations: LngLat[],
+    signal?: AbortSignal,
+    options?: MatrixOptions,
+  ): Promise<Duration[][]>;
+}
+
+export interface MatrixOptions {
+  /**
+   * Ask for an exact door-to-door answer even if it's slower (the dropped pin).
+   * Providers that are always exact ignore it.
+   */
+  exact?: boolean;
 }
 
 /** Key/value store for one-way durations. `undefined` = not cached. */

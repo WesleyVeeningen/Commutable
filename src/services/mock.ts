@@ -5,8 +5,8 @@ import type { Geocoder } from './ors';
  * Offline stand-ins for ORS, enabled with VITE_ORS_MOCK=true. Lets you try the UI
  * without an API key. Travel time = straight-line distance × 1.3 ÷ speed + overhead.
  */
-const SPEED_KMH: Record<Mode, number> = { walk: 5, bike: 16, car: 38 };
-const OVERHEAD_MIN: Record<Mode, number> = { walk: 0, bike: 2, car: 6 };
+const SPEED_KMH: Record<Mode, number> = { walk: 5, bike: 16, car: 38, transit: 24 };
+const OVERHEAD_MIN: Record<Mode, number> = { walk: 0, bike: 2, car: 6, transit: 12 };
 
 export function haversineKm(a: LngLat, b: LngLat): number {
   const R = 6371;

@@ -174,6 +174,7 @@ export async function pointDurations(
               [point],
               group.map((p) => p.address),
               signal,
+              { exact: true },
             ),
           { retries: 2, baseDelayMs: 1500, sleep, signal },
         );

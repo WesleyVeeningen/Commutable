@@ -81,6 +81,8 @@ export class OrsMatrixClient implements MatrixClient {
   private readonly slot = throttle(MIN_MATRIX_GAP_MS);
 
   async matrix(mode: Mode, sources: LngLat[], destinations: LngLat[], signal?: AbortSignal): Promise<Duration[][]> {
+    const profile = MODES[mode].orsProfile;
+    if (!profile) throw new Error(`ORS can't route mode "${mode}"`);
     await this.slot();
     const locations = [...sources, ...destinations].map((p) => [p.lng, p.lat]);
     const body = {
@@ -90,7 +92,7 @@ export class OrsMatrixClient implements MatrixClient {
       metrics: ['duration'],
     };
     const json = (await orsFetch(
-      `/v2/matrix/${MODES[mode].orsProfile}`,
+      `/v2/matrix/${profile}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
       'header',
       signal,

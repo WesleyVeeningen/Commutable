@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MODE_ORDER, MODES, TRIPS_DEFAULT, TRIPS_MAX, TRIPS_MIN } from '../core/modes';
+import { MODE_ORDER, MODES, TRANSIT_ARRIVE_BY, TRIPS_DEFAULT, TRIPS_MAX, TRIPS_MIN } from '../core/modes';
 import type { Address, LngLat, Mode, Place } from '../core/types';
 import type { PlaceDraft } from '../hooks/usePlaces';
 import { AddressSearch, inputClass } from './AddressSearch';
@@ -60,7 +60,7 @@ export function PlaceForm({ editing, focus, onSave, onCancel }: Props) {
 
       <div className="flex flex-col gap-1.5" role="radiogroup" aria-label="How you get there">
         <span className="text-[13px] font-semibold text-muted">How you get there</span>
-        <div className="grid grid-cols-3 gap-1 rounded-[14px] border border-line bg-panel p-1">
+        <div className="grid grid-cols-4 gap-1 rounded-[14px] border border-line bg-panel p-1">
           {MODE_ORDER.map((m) => (
             <button
               key={m}
@@ -68,15 +68,21 @@ export function PlaceForm({ editing, focus, onSave, onCancel }: Props) {
               role="radio"
               aria-checked={mode === m}
               onClick={() => setMode(m)}
-              className={`flex h-10 items-center justify-center gap-1.5 rounded-[10px] border-none text-sm font-semibold transition-colors ${
+              className={`flex h-10 min-w-0 items-center justify-center gap-1 rounded-[10px] border-none px-1 text-[13px] font-semibold transition-colors ${
                 mode === m ? 'bg-accent text-accent-ink' : 'bg-transparent text-ink hover:bg-sunk'
               }`}
             >
-              <Icon name={MODES[m].icon} size={19} />
+              <Icon name={MODES[m].icon} size={18} />
               <span>{MODES[m].label}</span>
             </button>
           ))}
         </div>
+        {mode === 'transit' && (
+          <span className="text-xs text-muted">
+            Train, metro, tram and bus, arriving by{' '}
+            {`${TRANSIT_ARRIVE_BY.hours}:${String(TRANSIT_ARRIVE_BY.minutes).padStart(2, '0')}`} on a weekday
+          </span>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-3">

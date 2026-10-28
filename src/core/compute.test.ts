@@ -323,6 +323,18 @@ describe('pointDurations', () => {
     expect(res.get('c')).toBe(60);
   });
 
+  it('asks providers for an exact answer', async () => {
+    const seen: unknown[] = [];
+    const client: MatrixClient = {
+      async matrix(_m, sources, destinations, _signal, options) {
+        seen.push(options);
+        return sources.map(() => destinations.map(() => 60));
+      },
+    };
+    await pointDurations({ lng: 0, lat: 0 }, [place('a', 1, 1, 'transit', 1)], client, undefined, noSleep);
+    expect(seen).toEqual([{ exact: true }]);
+  });
+
   it('treats an unroutable pin as unreachable for every place', async () => {
     const client: MatrixClient = {
       async matrix() {

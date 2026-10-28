@@ -1,7 +1,42 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "commutable", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--", "--port", "5173", "--strictPort"], "port": 5173 },
-    { "name": "commutable-mock", "runtimeExecutable": "npx", "runtimeArgs": ["vite", "--port", "5174", "--strictPort", "--mode", "mock"], "port": 5174 }
+    {
+      "name": "commutable",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "commutable-mock",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "5174",
+        "--strictPort",
+        "--mode",
+        "mock"
+      ],
+      "port": 5174
+    },
+    {
+      "name": "commutable-test",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "5175",
+        "--strictPort"
+      ],
+      "port": 5175
+    }
   ]
 }

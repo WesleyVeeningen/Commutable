@@ -24,7 +24,10 @@ export class IdbTravelCache implements TravelCache {
     const missIdx = out.flatMap((v, i) => (v === undefined ? [i] : []));
     if (!missIdx.length || !this.store) return out;
     try {
-      const vals = await getMany<Duration>(missIdx.map((i) => keys[i]), this.store);
+      const vals = await getMany<Duration>(
+        missIdx.map((i) => keys[i]),
+        this.store,
+      );
       const hot: [string, Duration][] = [];
       missIdx.forEach((i, j) => {
         if (vals[j] !== undefined) {

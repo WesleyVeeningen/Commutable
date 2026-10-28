@@ -66,7 +66,8 @@ export function scalePosition(v: number, d: Distribution): number {
 export function quickerThan(total: number, d: Distribution): number {
   if (d.sorted.length === 0) return 0;
   // first index with value > total (binary search)
-  let lo = 0, hi = d.sorted.length;
+  let lo = 0,
+    hi = d.sorted.length;
   while (lo < hi) {
     const mid = (lo + hi) >> 1;
     if (d.sorted[mid] > total) hi = mid;

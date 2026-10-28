@@ -91,7 +91,13 @@ describe('breakdown', () => {
   it('lists each place and totals them', () => {
     const work = place('work', 'bike', 5);
     const gym = place('gym', 'walk', 2);
-    const b = breakdown([work, gym], new Map([['work', 24 * 60], ['gym', 600]]));
+    const b = breakdown(
+      [work, gym],
+      new Map([
+        ['work', 24 * 60],
+        ['gym', 600],
+      ]),
+    );
     expect(b.rows.map((r) => r.weeklyMin)).toEqual([240, 40]);
     expect(b.rows[0].oneWayMin).toBe(24);
     expect(b.totalMin).toBe(280);

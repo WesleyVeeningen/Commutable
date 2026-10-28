@@ -31,12 +31,7 @@ export type Duration = number | null;
  * Returns durations[sourceIndex][destinationIndex] in seconds.
  */
 export interface MatrixClient {
-  matrix(
-    mode: Mode,
-    sources: LngLat[],
-    destinations: LngLat[],
-    signal?: AbortSignal,
-  ): Promise<Duration[][]>;
+  matrix(mode: Mode, sources: LngLat[], destinations: LngLat[], signal?: AbortSignal): Promise<Duration[][]>;
 }
 
 /** Key/value store for one-way durations. `undefined` = not cached. */

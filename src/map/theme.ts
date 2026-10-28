@@ -39,8 +39,8 @@ export const MAP_PALETTE: Record<Theme, Record<string, string>> = {
 
 export const HEAT_OPACITY: Record<Theme, number> = { light: 0.7, dark: 0.55 };
 
-/** The hex layer goes above land/water/buildings and below roads and labels. */
-export const HEX_BEFORE_LAYER = 'tunnel_motorway_casing';
+/** Hexes sit above land/water/buildings and minor streets, below main roads and labels (dense OSM streets would otherwise mesh over the heat). */
+export const HEX_BEFORE_LAYER = 'highway_major_casing';
 
 const PLACE_LABELS = ['label_other', 'label_village', 'label_town', 'label_city', 'label_city_capital'];
 const HIDDEN = [

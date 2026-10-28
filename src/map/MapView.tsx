@@ -8,7 +8,15 @@ import type { BBox } from '../core/grid';
 import type { LngLat, Place } from '../core/types';
 import type { HexProps } from './hexes';
 import { PinMarker, PlaceMarker } from './Markers';
-import { applyBaseTheme, heatColorExpression, HEAT_OPACITY, HEX_BEFORE_LAYER, MAP_PALETTE, STYLE_URL, type Theme } from './theme';
+import {
+  applyBaseTheme,
+  heatColorExpression,
+  HEAT_OPACITY,
+  HEX_BEFORE_LAYER,
+  MAP_PALETTE,
+  STYLE_URL,
+  type Theme,
+} from './theme';
 
 export type HexState = 'none' | 'loading' | 'ready';
 
@@ -99,7 +107,11 @@ export function MapView(props: Props) {
       map.setPaintProperty(LAYER, 'fill-opacity', 0);
       return;
     }
-    map.setPaintProperty(LAYER, 'fill-color', hexState === 'loading' ? MAP_PALETTE[theme].loading : heatColorExpression(theme));
+    map.setPaintProperty(
+      LAYER,
+      'fill-color',
+      hexState === 'loading' ? MAP_PALETTE[theme].loading : heatColorExpression(theme),
+    );
 
     const start = performance.now();
     let raf = 0;
@@ -140,15 +152,15 @@ export function MapView(props: Props) {
         [fitBounds.west, fitBounds.south],
         [fitBounds.east, fitBounds.north],
       ],
-      { padding, maxZoom: 13, duration: 900 },
+      { padding, maxZoom: 12, duration: 900 },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded, fitKey]);
 
   return (
-    <div className="absolute inset-0" style={{ background: 'var(--land)' }}>
+    <div className="absolute inset-0 isolate" style={{ background: 'var(--land)' }}>
       {/* inline style: maplibre-gl.css sets .maplibregl-map { position: relative } */}
-      <div ref={container} style={{ position: "absolute", inset: 0 }} />
+      <div ref={container} style={{ position: 'absolute', inset: 0 }} />
       {loaded &&
         places.map((p) => (
           <MapMarker key={p.id} map={mapRef.current!} at={p.address} anchor="left" offset={[-17, 0]}>

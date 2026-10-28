@@ -104,7 +104,12 @@ export async function computeHeatmap(opts: ComputeOptions): Promise<ComputeResul
       result = await withRetry(
         () => {
           progress.requests++;
-          return matrix.matrix(target.mode, idx.map((i) => centres[i]), [target.location], signal);
+          return matrix.matrix(
+            target.mode,
+            idx.map((i) => centres[i]),
+            [target.location],
+            signal,
+          );
         },
         { retries, baseDelayMs, sleep, signal },
       );
@@ -163,7 +168,13 @@ export async function pointDurations(
     [...byMode].map(async ([mode, group]) => {
       try {
         const res = await withRetry(
-          () => matrix.matrix(mode, [point], group.map((p) => p.address), signal),
+          () =>
+            matrix.matrix(
+              mode,
+              [point],
+              group.map((p) => p.address),
+              signal,
+            ),
           { retries: 2, baseDelayMs: 1500, sleep, signal },
         );
         group.forEach((p, j) => out.set(p.id, res[0]?.[j] ?? null));

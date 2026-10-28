@@ -37,7 +37,15 @@ describe('grid', () => {
   });
 
   it('never exceeds the cap', () => {
-    const g = buildGrid([{ lng: 2, lat: 48 }, { lng: 6, lat: 52 }], 'coarse', 15, 500);
+    const g = buildGrid(
+      [
+        { lng: 2, lat: 48 },
+        { lng: 6, lat: 52 },
+      ],
+      'coarse',
+      15,
+      500,
+    );
     expect(g.cells).toHaveLength(500);
   });
 });

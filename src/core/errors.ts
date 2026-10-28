@@ -32,7 +32,9 @@ export function userMessage(e: unknown): string {
     case 'rate-limit':
       return 'OpenRouteService rate limit reached. Wait a minute and retry.';
     case 'network':
-      return 'Can’t reach OpenRouteService. Check your connection.';
+      // ORS sends 403/429 responses without CORS headers, so the browser reports
+      // a bad key or an exhausted quota as a network failure too.
+      return 'Can’t reach OpenRouteService. Check your connection and API key, or wait a minute if you hit the rate limit.';
     default:
       return 'OpenRouteService couldn’t calculate travel times.';
   }

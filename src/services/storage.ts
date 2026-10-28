@@ -21,7 +21,9 @@ export function loadPlaces(): Place[] {
   try {
     const raw = JSON.parse(localStorage.getItem(PLACES_KEY) ?? '[]');
     return Array.isArray(raw)
-      ? raw.filter(isPlace).map((p) => ({ ...p, tripsPerWeek: Math.min(TRIPS_MAX, Math.max(TRIPS_MIN, p.tripsPerWeek)) }))
+      ? raw
+          .filter(isPlace)
+          .map((p) => ({ ...p, tripsPerWeek: Math.min(TRIPS_MAX, Math.max(TRIPS_MIN, p.tripsPerWeek)) }))
       : [];
   } catch {
     return [];

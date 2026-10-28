@@ -22,7 +22,10 @@ const KM_PER_DEG_LAT = 110.574;
 
 export function bboxAround(points: LngLat[], marginKm: number): BBox {
   if (points.length === 0) throw new Error('bboxAround needs at least one point');
-  let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
+  let west = Infinity,
+    south = Infinity,
+    east = -Infinity,
+    north = -Infinity;
   for (const p of points) {
     west = Math.min(west, p.lng);
     east = Math.max(east, p.lng);
